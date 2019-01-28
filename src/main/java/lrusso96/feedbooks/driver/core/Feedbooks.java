@@ -8,6 +8,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -68,6 +69,19 @@ public class Feedbooks
                 book.setUpdated(parseUTC(entry.getElementsByTag("updated").text()));
                 book.setIssued(Integer.parseInt(entry.getElementsByTag("dcterms:issued").text()));
                 book.setLanguage(new Locale(entry.getElementsByTag("dcterms:language").text()));
+                String coverKey = "http://opds-spec.org/image";
+                String downloadKey = "http://opds-spec.org/acquisition";
+                Elements links = entry.getElementsByTag("link");
+                for(Element link : links)
+                {
+                    String rel = link.attr("rel");
+                    if(rel.equals(coverKey))
+                        book.setCover(URI.create(link.attr("href")));
+                    else if(rel.equals(downloadKey))
+                        book.setDownload(URI.create(link.attr("href")));
+                }
+
+                book.setSource(URI.create(entry.getElementsByTag("dcterms:source").text()));
 
                 Elements categories = entry.getElementsByTag("category");
                 book.setCategories(categories.stream().map(this::parseCategory).toArray(Category[]::new));

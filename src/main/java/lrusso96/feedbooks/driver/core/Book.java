@@ -19,6 +19,8 @@ public class Book
     private Category[] categories;
     private URI download;
     private URI cover;
+    //not always a URI!
+    private URI source;
 
     public String getTitle()
     {
@@ -130,6 +132,16 @@ public class Book
         this.issued = issued;
     }
 
+    public URI getSource()
+    {
+        return source;
+    }
+
+    public void setSource(URI source)
+    {
+        this.source = source;
+    }
+
     @Override
     public boolean equals(Object o)
     {
@@ -148,13 +160,15 @@ public class Book
                 Objects.equals(language, book.language) &&
                 Arrays.equals(categories, book.categories) &&
                 Objects.equals(download, book.download) &&
-                Objects.equals(cover, book.cover);
+                Objects.equals(cover, book.cover) &&
+                Objects.equals(source, book.source);
     }
 
     @Override
     public int hashCode()
     {
-        int result = Objects.hash(id, title, author, summary, published, updated, issued, language, download, cover);
+        int result = Objects.hash(id, title, author, summary, published, updated, issued, language, download, cover,
+                source);
         result = 31 * result + Arrays.hashCode(categories);
         return result;
     }
@@ -162,8 +176,9 @@ public class Book
     @Override
     public String toString()
     {
-        return "Book{" + "id=" + id + ", title='" + title + '\'' + ", author=" + author + ", summary='" + summary + '\'' + ", published=" + published + ", updated=" + updated + ", issued=" + issued + ", language=" + language + ", categories=" + Arrays.toString(categories) + ", download=" + download + ", cover=" + cover + '}';
+        return "Book{" + "id=" + id + ", title='" + title + '\'' + ", author=" + author + ", summary='" + summary +
+                '\'' + ", published=" + published + ", updated=" + updated + ", issued=" + issued + ", language=" +
+                language + ", categories=" + Arrays.toString(categories) + ", download=" + download + ", cover=" +
+                cover + ", source=" + source + '}';
     }
-
-
 }
