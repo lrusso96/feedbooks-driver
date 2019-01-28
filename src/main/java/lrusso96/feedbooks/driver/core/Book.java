@@ -14,6 +14,7 @@ public class Book
     private String summary;
     private LocalDate published;
     private LocalDate updated;
+    private int issued;
     private Locale language;
     private Category[] categories;
     private URI download;
@@ -119,6 +120,16 @@ public class Book
         this.cover = cover;
     }
 
+    public int getIssued()
+    {
+        return issued;
+    }
+
+    public void setIssued(int issued)
+    {
+        this.issued = issued;
+    }
+
     @Override
     public boolean equals(Object o)
     {
@@ -127,13 +138,23 @@ public class Book
         if (o == null || getClass() != o.getClass())
             return false;
         Book book = (Book) o;
-        return id == book.id && Objects.equals(title, book.title) && Objects.equals(author, book.author) && Objects.equals(summary, book.summary) && Objects.equals(published, book.published) && Objects.equals(updated, book.updated) && Objects.equals(language, book.language) && Arrays.equals(categories, book.categories) && Objects.equals(download, book.download) && Objects.equals(cover, book.cover);
+        return id == book.id &&
+                Objects.equals(title, book.title) &&
+                Objects.equals(author, book.author) &&
+                Objects.equals(summary, book.summary) &&
+                Objects.equals(published, book.published) &&
+                Objects.equals(updated, book.updated) &&
+                Objects.equals(issued, book.issued) &&
+                Objects.equals(language, book.language) &&
+                Arrays.equals(categories, book.categories) &&
+                Objects.equals(download, book.download) &&
+                Objects.equals(cover, book.cover);
     }
 
     @Override
     public int hashCode()
     {
-        int result = Objects.hash(id, title, author, summary, published, updated, language, download, cover);
+        int result = Objects.hash(id, title, author, summary, published, updated, issued, language, download, cover);
         result = 31 * result + Arrays.hashCode(categories);
         return result;
     }
@@ -141,6 +162,8 @@ public class Book
     @Override
     public String toString()
     {
-        return "Book{" + "id=" + id + ", title='" + title + '\'' + ", author=" + author + ", summary='" + summary + '\'' + ", published=" + published + ", updated=" + updated + ", language=" + language + ", categories=" + Arrays.toString(categories) + ", download=" + download + ", cover=" + cover + '}';
+        return "Book{" + "id=" + id + ", title='" + title + '\'' + ", author=" + author + ", summary='" + summary + '\'' + ", published=" + published + ", updated=" + updated + ", issued=" + issued + ", language=" + language + ", categories=" + Arrays.toString(categories) + ", download=" + download + ", cover=" + cover + '}';
     }
+
+
 }
