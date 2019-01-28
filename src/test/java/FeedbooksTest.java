@@ -22,7 +22,7 @@ public class FeedbooksTest
         assertNotNull(book.getDownload());
     }
 
-    @Test
+/*    @Test
     public void customLanguages() throws FeedbooksException
     {
         Locale[] lang = new Locale[]{new Locale("it"), new Locale("fr") };
@@ -34,7 +34,7 @@ public class FeedbooksTest
         assertNotEquals(0, book.getId());
         assertNotNull(book.getTitle());
         assertNotNull(book.getDownload());
-    }
+    }*/
 
     @Test
     public void maxResults() throws FeedbooksException
