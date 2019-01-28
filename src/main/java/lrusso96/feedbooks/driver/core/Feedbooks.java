@@ -12,7 +12,6 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
 
 import static lrusso96.feedbooks.driver.core.Utils.parseUTC;
 
@@ -41,7 +40,12 @@ public class Feedbooks
 
     private int parseID(String string){
         String[] ids = string.split("/");
-        return Integer.parseInt(ids[ids.length - 1]);
+        try {
+            return Integer.parseInt(ids[ids.length - 1]);
+        }
+        catch (NumberFormatException e){
+            return 0;
+        }
     }
 
     public Book[] search(String query) throws FeedbooksException
