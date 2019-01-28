@@ -1,4 +1,4 @@
-# Feedbooks Driver  [![Build Status](https://travis-ci.com/lrusso96/feedbooks-driver.svg?branch=master)](https://travis-ci.com/lrusso96/feedbooks-driver) [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+# Feedbooks Driver  [![Build Status](https://travis-ci.com/lrusso96/feedbooks-driver.svg?token=uoNxtXYBDHpqERGMiZA8&branch=master)](https://travis-ci.com/lrusso96/feedbooks-driver) [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 Feedbooks driver is Java Libary to obtain infos from Feedbooks.
 
