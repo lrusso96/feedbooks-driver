@@ -28,7 +28,6 @@ public class Feedbooks
     {
         this.languages = languages == null?  new Locale[]{ new Locale("en") } : languages;
         this.maxResults = maxResults == null? DEFAULT_MAX_RESULTS : maxResults;
-
     }
 
     private Category parseCategory(Element element){
@@ -48,58 +47,69 @@ public class Feedbooks
         }
     }
 
+    private Author parseAuthor(Element entry){
+        Author author = new Author();
+        String id = entry.getElementsByTag("uri").text();
+        author.setId(parseID(id));
+        author.setFullName(entry.getElementsByTag("name").text());
+        author.setBirthDate(Integer.parseInt(entry.getElementsByTag("schema:birthDate").text()));
+        author.setDeathDate(Integer.parseInt(entry.getElementsByTag("schema:deathDate").text()));
+        return author;
+    }
+
+    private Book parseBook(Element entry){
+        Book book = new Book();
+        String id = entry.getElementsByTag("id").text();
+        book.setId(parseID(id));
+        book.setTitle(entry.getElementsByTag("title").text());
+        book.setSummary(entry.getElementsByTag("summary").text());
+        book.setPublished(parseUTC(entry.getElementsByTag("published").text()));
+        book.setUpdated(parseUTC(entry.getElementsByTag("updated").text()));
+        book.setIssued(Integer.parseInt(entry.getElementsByTag("dcterms:issued").text()));
+        book.setLanguage(new Locale(entry.getElementsByTag("dcterms:language").text()));
+        String coverKey = "http://opds-spec.org/image";
+        String downloadKey = "http://opds-spec.org/acquisition";
+        Elements links = entry.getElementsByTag("link");
+        for (Element link : links)
+        {
+            String rel = link.attr("rel");
+            if (rel.equals(coverKey))
+                book.setCover(URI.create(link.attr("href")));
+            else if (rel.equals(downloadKey))
+                book.setDownload(URI.create(link.attr("href")));
+        }
+
+        book.setSource(URI.create(entry.getElementsByTag("dcterms:source").text()));
+
+        Elements categories = entry.getElementsByTag("category");
+        book.setCategories(categories.stream().map(this::parseCategory).toArray(Category[]::new));
+
+        // can focus on Element author only!
+        book.setAuthor(parseAuthor(entry));
+        return book;
+    }
+
     public Book[] search(String query) throws FeedbooksException
     {
         String endpoint = "https://feedbooks.com/books/search.atom";
         try
         {
-            Connection connection = Jsoup.connect(endpoint).data("query", query);
-            for(Locale locale : languages)
-                connection = connection.data("lang", locale.getLanguage());
-            Document doc = connection.get();
-            Elements entries = doc.getElementsByTag("entry");
-            int cnt = maxResults;
             List<Book> ret = new ArrayList<>();
-            for (Element entry : entries)
-            {
-                if (cnt-- == 0)
-                    break;
-                Book book = new Book();
-                String id = entry.getElementsByTag("id").text();
-                book.setId(parseID(id));
-                book.setTitle(entry.getElementsByTag("title").text());
-                book.setSummary(entry.getElementsByTag("summary").text());
-                book.setPublished(parseUTC(entry.getElementsByTag("published").text()));
-                book.setUpdated(parseUTC(entry.getElementsByTag("updated").text()));
-                book.setIssued(Integer.parseInt(entry.getElementsByTag("dcterms:issued").text()));
-                book.setLanguage(new Locale(entry.getElementsByTag("dcterms:language").text()));
-                String coverKey = "http://opds-spec.org/image";
-                String downloadKey = "http://opds-spec.org/acquisition";
-                Elements links = entry.getElementsByTag("link");
-                for(Element link : links)
+            Connection connection = Jsoup.connect(endpoint).data("query", query);
+            boolean shouldBreak = false;
+            int cnt = maxResults;
+            for(int i = 0; i < languages.length && !shouldBreak; i++){
+                Document doc = connection.data("lang", languages[i].getLanguage()).get();
+                Elements entries = doc.getElementsByTag("entry");
+                for (Element entry : entries)
                 {
-                    String rel = link.attr("rel");
-                    if(rel.equals(coverKey))
-                        book.setCover(URI.create(link.attr("href")));
-                    else if(rel.equals(downloadKey))
-                        book.setDownload(URI.create(link.attr("href")));
+                    if (cnt-- == 0)
+                    {
+                        shouldBreak = true;
+                        break;
+                    }
+                    ret.add(parseBook(entry));
                 }
-
-                book.setSource(URI.create(entry.getElementsByTag("dcterms:source").text()));
-
-                Elements categories = entry.getElementsByTag("category");
-                book.setCategories(categories.stream().map(this::parseCategory).toArray(Category[]::new));
-
-                // can focus on Element author only!
-                Author author = new Author();
-                id = entry.getElementsByTag("uri").text();
-                author.setId(parseID(id));
-                author.setFullName(entry.getElementsByTag("name").text());
-                author.setBirthDate(Integer.parseInt(entry.getElementsByTag("schema:birthDate").text()));
-                author.setDeathDate(Integer.parseInt(entry.getElementsByTag("schema:deathDate").text()));
-                book.setAuthor(author);
-
-                ret.add(book);
             }
             return ret.toArray(new Book[0]);
         }

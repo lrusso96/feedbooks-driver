@@ -5,6 +5,8 @@ import lrusso96.feedbooks.driver.core.Feedbooks;
 import lrusso96.feedbooks.driver.exceptions.FeedbooksException;
 import org.junit.Test;
 
+import java.util.Locale;
+
 import static org.junit.Assert.*;
 
 public class FeedbooksTest
@@ -22,10 +24,10 @@ public class FeedbooksTest
         assertNotNull(book.getDownload());
     }
 
-/*    @Test
+    @Test
     public void customLanguages() throws FeedbooksException
     {
-        Locale[] lang = new Locale[]{new Locale("it"), new Locale("fr") };
+        Locale[] lang = new Locale[]{new Locale("it"), new Locale("en")};
         Feedbooks feedbooks = new Feedbooks(lang, null);
         Book[] ret = feedbooks.search("Carroll");
         assertNotEquals(0, ret.length);
@@ -34,7 +36,7 @@ public class FeedbooksTest
         assertNotEquals(0, book.getId());
         assertNotNull(book.getTitle());
         assertNotNull(book.getDownload());
-    }*/
+    }
 
     @Test
     public void maxResults() throws FeedbooksException
