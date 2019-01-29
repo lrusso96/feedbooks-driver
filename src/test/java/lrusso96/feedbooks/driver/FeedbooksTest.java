@@ -1,12 +1,8 @@
 package lrusso96.feedbooks.driver;
 
-import lrusso96.feedbooks.driver.core.Book;
-import lrusso96.feedbooks.driver.core.Category;
-import lrusso96.feedbooks.driver.core.Feedbooks;
+import lrusso96.feedbooks.driver.core.*;
 import lrusso96.feedbooks.driver.exceptions.FeedbooksException;
 import org.junit.Test;
-
-import java.util.Locale;
 
 import static org.junit.Assert.*;
 
@@ -15,7 +11,7 @@ public class FeedbooksTest
     @Test
     public void simpleSearch() throws FeedbooksException
     {
-        Feedbooks feedbooks = new Feedbooks(null, null, null);
+        Feedbooks feedbooks = new FeedbooksBuilder().build();
         Book[] ret = feedbooks.search("Carroll");
         assertNotEquals(0, ret.length);
         Book book = ret[0];
@@ -28,8 +24,10 @@ public class FeedbooksTest
     @Test
     public void customLanguages() throws FeedbooksException
     {
-        Locale[] lang = new Locale[]{new Locale("it"), new Locale("en")};
-        Feedbooks feedbooks = new Feedbooks(lang, null, null);
+        Feedbooks feedbooks = new FeedbooksBuilder()
+                .addLanguage(Language.ITALIAN)
+                .addLanguage(Language.ENGLISH)
+                .build();
         Book[] ret = feedbooks.search("Carroll");
         assertNotEquals(0, ret.length);
         Book book = ret[0];
@@ -43,7 +41,7 @@ public class FeedbooksTest
     public void maxResults() throws FeedbooksException
     {
         int limit = 2;
-        Feedbooks feedbooks = new Feedbooks(null, limit, null);
+        Feedbooks feedbooks = new FeedbooksBuilder().setMaxResults(limit).build();
         Book[] ret = feedbooks.search("Shakespeare");
         assertFalse(ret.length > limit);
         Book book = ret[0];
@@ -57,8 +55,7 @@ public class FeedbooksTest
     public void getRecent() throws FeedbooksException
     {
         int limit = 20;
-        Locale[] lang = new Locale[]{new Locale("it")};
-        Feedbooks feedbooks = new Feedbooks(lang, limit, null);
+        Feedbooks feedbooks = new FeedbooksBuilder().setMaxResults(limit).addLanguage(Language.ITALIAN).build();
         Book[] ret = feedbooks.getRecent();
         assertFalse(ret.length > limit);
         Book book = ret[0];
@@ -72,8 +69,7 @@ public class FeedbooksTest
     public void getTop() throws FeedbooksException
     {
         int limit = 20;
-        Locale[] lang = new Locale[]{new Locale("es")};
-        Feedbooks feedbooks = new Feedbooks(lang, limit, null);
+        Feedbooks feedbooks = new FeedbooksBuilder().setMaxResults(limit).addLanguage(Language.SPANISH).build();
         Book[] ret = feedbooks.getTop();
         assertFalse(ret.length > limit);
         Book book = ret[0];
@@ -89,7 +85,7 @@ public class FeedbooksTest
         Category.Label[] categories = new Category.Label[]{Category.Label.DRAMA, Category.Label.SEA_STORIES};
         for (Category.Label label : categories)
         {
-            Feedbooks feedbooks = new Feedbooks(null, null, label);
+            Feedbooks feedbooks = new FeedbooksBuilder().setLabel(label).build();
             Book[] ret = feedbooks.getTop();
             for (Book book : ret)
             {
@@ -110,8 +106,11 @@ public class FeedbooksTest
     @Test
     public void getAllBooks() throws FeedbooksException
     {
-        Locale[] lang = new Locale[]{new Locale("it")};
-        Feedbooks feedbooks = new Feedbooks(lang, null, Category.Label.LITERARY);
+        Feedbooks feedbooks = new FeedbooksBuilder()
+                .setUnlimitedSearch()
+                .addLanguage(Language.ITALIAN)
+                .setLabel(Category.Label.LITERARY)
+                .build();
         Book[] ret = feedbooks.getTop();
         assertTrue(ret.length > 70 );
     }

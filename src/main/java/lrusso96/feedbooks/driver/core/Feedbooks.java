@@ -19,13 +19,13 @@ import static lrusso96.feedbooks.driver.core.Utils.parseUTC;
 public class Feedbooks
 {
     //supported lang: en, it, es, de and fr.
-    private final Locale[] languages;
+    private final Language[] languages;
     private final Integer maxResults;
     private final Category.Label label;
 
-    public Feedbooks(Locale[] languages, Integer maxResults, Category.Label label)
+    Feedbooks(Language[] languages, Integer maxResults, Category.Label label)
     {
-        this.languages = languages == null?  new Locale[]{ new Locale("en") } : languages;
+        this.languages = languages;
         this.maxResults = maxResults;
         this.label = label;
     }
@@ -118,11 +118,11 @@ public class Feedbooks
                 connection = connection.data("category", label+"");
             Integer cnt = maxResults;
             int totalResults = Integer.MAX_VALUE;
-            for (Locale language : languages)
+            for (Language language : languages)
             {
                 for (int page = 1; ret.size() < totalResults; page++)
                 {
-                    Document doc = connection.data("lang", language.getLanguage()).data("page", page + "").get();
+                    Document doc = connection.data("lang", language.toString()).data("page", page + "").get();
                     totalResults = NumberUtils.toInt(doc.getElementsByTag("opensearch:totalResults").text());
 
                     Elements entries = doc.getElementsByTag("entry");
