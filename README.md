@@ -2,10 +2,8 @@
 [![Build Status](https://travis-ci.com/lrusso96/feedbooks-driver.svg?token=uoNxtXYBDHpqERGMiZA8&branch=master)](https://travis-ci.com/lrusso96/feedbooks-driver) 
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/94908fbbc65842d1aaca4ee4a31a896e)](https://app.codacy.com/app/russo.1699981/feedbooks-driver?utm_source=github.com&utm_medium=referral&utm_content=lrusso96/feedbooks-driver&utm_campaign=Badge_Grade_Settings)
 [![BCH compliance](https://bettercodehub.com/edge/badge/lrusso96/feedbooks-driver?branch=master)](https://bettercodehub.com/)
 [![CodeFactor](https://www.codefactor.io/repository/github/lrusso96/feedbooks-driver/badge)](https://www.codefactor.io/repository/github/lrusso96/feedbooks-driver)
-
 [![codecov](https://codecov.io/gh/lrusso96/feedbooks-driver/branch/master/graph/badge.svg)](https://codecov.io/gh/lrusso96/feedbooks-driver)
 
 Feedbooks driver is Java Libary to obtain infos from Feedbooks.
