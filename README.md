@@ -2,8 +2,8 @@
 [![Build Status](https://travis-ci.com/lrusso96/feedbooks-driver.svg?token=uoNxtXYBDHpqERGMiZA8&branch=master)](https://travis-ci.com/lrusso96/feedbooks-driver) 
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
-[![BCH compliance](https://bettercodehub.com/edge/badge/lrusso96/feedbooks-driver?branch=master)](https://bettercodehub.com/)
 [![CodeFactor](https://www.codefactor.io/repository/github/lrusso96/feedbooks-driver/badge)](https://www.codefactor.io/repository/github/lrusso96/feedbooks-driver)
+[![BCH compliance](https://bettercodehub.com/edge/badge/lrusso96/feedbooks-driver?branch=master)](https://bettercodehub.com/)
 [![codecov](https://codecov.io/gh/lrusso96/feedbooks-driver/branch/master/graph/badge.svg)](https://codecov.io/gh/lrusso96/feedbooks-driver)
 
 Feedbooks driver is Java Libary to obtain infos from Feedbooks.
@@ -38,7 +38,7 @@ You can easily add to your existing project through Maven or Gradle.
 <dependency>
     <groupId>com.github.lrusso96</groupId>
     <artifactId>feedbooks-driver</artifactId>
-    <version>0.0.3</version>
+    <version>0.1.0</version>
 </dependency>
 ```
 
