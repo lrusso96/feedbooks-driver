@@ -49,4 +49,22 @@ public class Category
     {
         return "Category{" + "term='" + term + '\'' + ", label='" + label + '\'' + '}';
     }
+
+    public enum Label
+    {
+        FICTION("FBFIC000000"),
+        NON_FICTION("FBNFC000000")
+        ;
+
+        private final String term;
+
+        Label(final String term) {
+            this.term = term;
+        }
+
+        @Override
+        public String toString() {
+            return term;
+        }
+    }
 }
