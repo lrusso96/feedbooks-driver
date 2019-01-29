@@ -40,7 +40,7 @@ You can easily add to your existing project through Maven or Gradle.
 <dependency>
     <groupId>com.github.lrusso96</groupId>
     <artifactId>feedbooks-driver</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
 </dependency>
 ```
 
@@ -65,7 +65,6 @@ dependencies {
 ```
 Feedbooks feedbooks = new Feedbooks(null, 10);
 feedbooks.search("Carroll");
-
  ```
 
  ## Dependencies
