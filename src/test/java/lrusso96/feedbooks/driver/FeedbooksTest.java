@@ -84,24 +84,26 @@ public class FeedbooksTest
     }
 
     @Test
-    public void getFictionOnly() throws FeedbooksException
+    public void getSpecificCategory() throws FeedbooksException
     {
-        Feedbooks feedbooks = new Feedbooks(null, null, Category.Label.FICTION);
-        Book[] ret = feedbooks.getTop();
-        for (Book book : ret)
+        Category.Label[] categories = new Category.Label[]{Category.Label.FICTION, Category.Label.SEA_STORIES};
+        for (Category.Label label : categories)
         {
-            boolean found = false;
-            for (Category category : book.getCategories())
+            Feedbooks feedbooks = new Feedbooks(null, null, label);
+            Book[] ret = feedbooks.getTop();
+            for (Book book : ret)
             {
-                if (category.getTerm().equals(Category.Label.FICTION.toString()))
+                boolean found = false;
+                for (Category category : book.getCategories())
                 {
-                    found = true;
-                    break;
+                    if (category.getTerm().equals(label.toString()))
+                    {
+                        found = true;
+                        break;
+                    }
                 }
+                assertTrue(found);
             }
-            assertTrue(found);
         }
     }
-
-
 }
