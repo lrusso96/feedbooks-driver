@@ -1,6 +1,8 @@
 package lrusso96.feedbooks.driver.core;
 
+import com.sun.jndi.toolkit.url.Uri;
 import lrusso96.feedbooks.driver.exceptions.FeedbooksException;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -39,12 +41,9 @@ public class Feedbooks
 
     private int parseID(String string){
         String[] ids = string.split("/");
-        try {
-            return Integer.parseInt(ids[ids.length - 1]);
-        }
-        catch (NumberFormatException e){
+        if(ids.length == 0)
             return 0;
-        }
+        return NumberUtils.toInt(ids[ids.length - 1], 0);
     }
 
     private Author parseAuthor(Element entry){
@@ -52,8 +51,8 @@ public class Feedbooks
         String id = entry.getElementsByTag("uri").text();
         author.setId(parseID(id));
         author.setFullName(entry.getElementsByTag("name").text());
-        author.setBirthDate(Integer.parseInt(entry.getElementsByTag("schema:birthDate").text()));
-        author.setDeathDate(Integer.parseInt(entry.getElementsByTag("schema:deathDate").text()));
+        author.setBirthDate(NumberUtils.toInt(entry.getElementsByTag("schema:birthDate").text(), 0));
+        author.setDeathDate(NumberUtils.toInt(entry.getElementsByTag("schema:deathDate").text(), 0));
         return author;
     }
 
@@ -65,7 +64,7 @@ public class Feedbooks
         book.setSummary(entry.getElementsByTag("summary").text());
         book.setPublished(parseUTC(entry.getElementsByTag("published").text()));
         book.setUpdated(parseUTC(entry.getElementsByTag("updated").text()));
-        book.setIssued(Integer.parseInt(entry.getElementsByTag("dcterms:issued").text()));
+        book.setIssued(NumberUtils.toInt(entry.getElementsByTag("dcterms:issued").text(), 0));
         book.setLanguage(new Locale(entry.getElementsByTag("dcterms:language").text()));
         String coverKey = "http://opds-spec.org/image";
         String downloadKey = "http://opds-spec.org/acquisition";
@@ -79,7 +78,7 @@ public class Feedbooks
                 book.setDownload(URI.create(link.attr("href")));
         }
 
-        book.setSource(URI.create(entry.getElementsByTag("dcterms:source").text()));
+        book.setSource(entry.getElementsByTag("dcterms:source").text());
 
         Elements categories = entry.getElementsByTag("category");
         book.setCategories(categories.stream().map(this::parseCategory).toArray(Category[]::new));
@@ -91,11 +90,32 @@ public class Feedbooks
 
     public Book[] search(String query) throws FeedbooksException
     {
-        String endpoint = "https://feedbooks.com/books/search.atom";
+        URI endpoint = URI.create("https://feedbooks.com/books/search.atom");
+        return _search(endpoint, query);
+    }
+
+    public Book[] getRecent() throws FeedbooksException
+    {
+        URI endpoint = URI.create("https://feedbooks.com/books/recent.atom");
+        return _search(endpoint, null);
+    }
+
+    public Book[] getTop() throws FeedbooksException
+    {
+        URI endpoint = URI.create("https://feedbooks.com/books/top.atom");
+        return _search(endpoint, null);
+    }
+
+
+
+    private Book[] _search(URI endpoint, String query) throws FeedbooksException
+    {
         try
         {
             List<Book> ret = new ArrayList<>();
-            Connection connection = Jsoup.connect(endpoint).data("query", query);
+            Connection connection = Jsoup.connect(endpoint.toString());
+            if(query!= null)
+                connection = connection.data("query", query);
             boolean shouldBreak = false;
             int cnt = maxResults;
             for(int i = 0; i < languages.length && !shouldBreak; i++){
@@ -118,4 +138,5 @@ public class Feedbooks
             throw new FeedbooksException(e.getMessage());
         }
     }
+
 }

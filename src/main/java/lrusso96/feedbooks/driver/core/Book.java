@@ -20,7 +20,7 @@ public class Book
     private URI download;
     private URI cover;
     //not always a URI!
-    private URI source;
+    private String source;
 
     public String getTitle()
     {
@@ -132,12 +132,12 @@ public class Book
         this.issued = issued;
     }
 
-    public URI getSource()
+    public String getSource()
     {
         return source;
     }
 
-    public void setSource(URI source)
+    public void setSource(String source)
     {
         this.source = source;
     }
