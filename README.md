@@ -61,7 +61,7 @@ dependencies {
 
 ### Examples
 ```
-Feedbooks feedbooks = new Feedbooks(languages, limit, null);
+Feedbooks feedbooks = new FeedbooksBuilder().addLanguage(Language.ITALIAN).build();
 feedbooks.search("Carroll");
  ```
 
