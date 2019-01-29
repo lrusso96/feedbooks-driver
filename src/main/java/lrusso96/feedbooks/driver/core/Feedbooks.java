@@ -1,6 +1,5 @@
 package lrusso96.feedbooks.driver.core;
 
-import com.sun.jndi.toolkit.url.Uri;
 import lrusso96.feedbooks.driver.exceptions.FeedbooksException;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.jsoup.Connection;
@@ -19,23 +18,24 @@ import static lrusso96.feedbooks.driver.core.Utils.parseUTC;
 
 public class Feedbooks
 {
-    //defaults
-    private static final int DEFAULT_MAX_RESULTS = 10;
-
     //supported lang: en, it, es, de and fr.
     private final Locale[] languages;
-    private final int maxResults;
+    private final Integer maxResults;
+    private final Category.Label label;
 
-    public Feedbooks(Locale[] languages, Integer maxResults)
+    public Feedbooks(Locale[] languages, Integer maxResults, Category.Label label)
     {
         this.languages = languages == null?  new Locale[]{ new Locale("en") } : languages;
-        this.maxResults = maxResults == null? DEFAULT_MAX_RESULTS : maxResults;
+        this.maxResults = maxResults;
+        this.label = label;
     }
 
     private Category parseCategory(Element element){
         Category category = new Category();
-        category.setLabel(element.attr("label"));
-        category.setTerm(element.attr("term"));
+        String term = element.attr("term");
+        category.setTerm(term);
+        String label = element.attr("label");
+        category.setLabel(label);
         return category;
     }
 
@@ -106,8 +106,6 @@ public class Feedbooks
         return _search(endpoint, null);
     }
 
-
-
     private Book[] _search(URI endpoint, String query) throws FeedbooksException
     {
         try
@@ -116,19 +114,26 @@ public class Feedbooks
             Connection connection = Jsoup.connect(endpoint.toString());
             if(query!= null)
                 connection = connection.data("query", query);
-            boolean shouldBreak = false;
-            int cnt = maxResults;
-            for(int i = 0; i < languages.length && !shouldBreak; i++){
-                Document doc = connection.data("lang", languages[i].getLanguage()).get();
-                Elements entries = doc.getElementsByTag("entry");
-                for (Element entry : entries)
+            if(label!= null)
+                connection = connection.data("category", label+"");
+            Integer cnt = maxResults;
+            int totalResults = Integer.MAX_VALUE;
+            for (Locale language : languages)
+            {
+                for (int page = 1; ret.size() < totalResults; page++)
                 {
-                    if (cnt-- == 0)
+                    Document doc = connection.data("lang", language.getLanguage()).data("page", page + "").get();
+                    totalResults = NumberUtils.toInt(doc.getElementsByTag("opensearch:totalResults").text());
+
+                    Elements entries = doc.getElementsByTag("entry");
+                    for (Element entry : entries)
                     {
-                        shouldBreak = true;
-                        break;
+                        if ((cnt != null) && (cnt-- == 0))
+                        {
+                            return ret.toArray(new Book[0]);
+                        }
+                        ret.add(parseBook(entry));
                     }
-                    ret.add(parseBook(entry));
                 }
             }
             return ret.toArray(new Book[0]);
