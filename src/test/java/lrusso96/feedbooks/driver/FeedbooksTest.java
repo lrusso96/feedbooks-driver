@@ -86,7 +86,7 @@ public class FeedbooksTest
     @Test
     public void getSpecificCategory() throws FeedbooksException
     {
-        Category.Label[] categories = new Category.Label[]{Category.Label.FICTION, Category.Label.SEA_STORIES};
+        Category.Label[] categories = new Category.Label[]{Category.Label.DRAMA, Category.Label.SEA_STORIES};
         for (Category.Label label : categories)
         {
             Feedbooks feedbooks = new Feedbooks(null, null, label);
@@ -105,5 +105,14 @@ public class FeedbooksTest
                 assertTrue(found);
             }
         }
+    }
+
+    @Test
+    public void getAllBooks() throws FeedbooksException
+    {
+        Locale[] lang = new Locale[]{new Locale("it")};
+        Feedbooks feedbooks = new Feedbooks(lang, null, Category.Label.LITERARY);
+        Book[] ret = feedbooks.getTop();
+        assertTrue(ret.length > 70 );
     }
 }

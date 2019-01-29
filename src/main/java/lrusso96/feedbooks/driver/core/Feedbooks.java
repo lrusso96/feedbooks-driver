@@ -18,18 +18,15 @@ import static lrusso96.feedbooks.driver.core.Utils.parseUTC;
 
 public class Feedbooks
 {
-    //defaults
-    private static final int DEFAULT_MAX_RESULTS = 10;
-
     //supported lang: en, it, es, de and fr.
     private final Locale[] languages;
-    private final int maxResults;
+    private final Integer maxResults;
     private final Category.Label label;
 
     public Feedbooks(Locale[] languages, Integer maxResults, Category.Label label)
     {
         this.languages = languages == null?  new Locale[]{ new Locale("en") } : languages;
-        this.maxResults = maxResults == null? DEFAULT_MAX_RESULTS : maxResults;
+        this.maxResults = maxResults;
         this.label = label;
     }
 
@@ -119,19 +116,24 @@ public class Feedbooks
                 connection = connection.data("query", query);
             if(label!= null)
                 connection = connection.data("category", label+"");
-            boolean shouldBreak = false;
-            int cnt = maxResults;
-            for(int i = 0; i < languages.length && !shouldBreak; i++){
-                Document doc = connection.data("lang", languages[i].getLanguage()).get();
-                Elements entries = doc.getElementsByTag("entry");
-                for (Element entry : entries)
+            Integer cnt = maxResults;
+            int totalResults = Integer.MAX_VALUE;
+            for (Locale language : languages)
+            {
+                for (int page = 1; ret.size() < totalResults; page++)
                 {
-                    if (cnt-- == 0)
+                    Document doc = connection.data("lang", language.getLanguage()).data("page", page + "").get();
+                    totalResults = NumberUtils.toInt(doc.getElementsByTag("opensearch:totalResults").text());
+
+                    Elements entries = doc.getElementsByTag("entry");
+                    for (Element entry : entries)
                     {
-                        shouldBreak = true;
-                        break;
+                        if ((cnt != null) && (cnt-- == 0))
+                        {
+                            return ret.toArray(new Book[0]);
+                        }
+                        ret.add(parseBook(entry));
                     }
-                    ret.add(parseBook(entry));
                 }
             }
             return ret.toArray(new Book[0]);
