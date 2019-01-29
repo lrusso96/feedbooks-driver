@@ -38,7 +38,7 @@ You can easily add to your existing project through Maven or Gradle.
 <dependency>
     <groupId>com.github.lrusso96</groupId>
     <artifactId>feedbooks-driver</artifactId>
-    <version>0.0.2</version>
+    <version>0.0.3</version>
 </dependency>
 ```
 
@@ -61,7 +61,7 @@ dependencies {
 
 ### Examples
 ```
-Feedbooks feedbooks = new Feedbooks(null, 10);
+Feedbooks feedbooks = new Feedbooks(languages, limit, null);
 feedbooks.search("Carroll");
  ```
 
