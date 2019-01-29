@@ -1,9 +1,9 @@
+package lrusso96.feedbooks.driver;
+
 import lrusso96.feedbooks.driver.core.Book;
 import lrusso96.feedbooks.driver.core.Feedbooks;
 import lrusso96.feedbooks.driver.exceptions.FeedbooksException;
 import org.junit.Test;
-
-import java.util.Locale;
 
 import static org.junit.Assert.*;
 
