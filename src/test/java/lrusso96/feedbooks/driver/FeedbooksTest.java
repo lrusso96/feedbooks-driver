@@ -52,5 +52,35 @@ public class FeedbooksTest
         assertNotNull(book.getDownload());
     }
 
+    @Test
+    public void getRecent() throws FeedbooksException
+    {
+        int limit = 20;
+        Locale[] lang = new Locale[]{new Locale("it")};
+        Feedbooks feedbooks = new Feedbooks(lang, limit);
+        Book[] ret = feedbooks.getRecent();
+        assertFalse(ret.length > limit);
+        Book book = ret[0];
+        assertNotNull(book.getAuthor());
+        assertNotEquals(0, book.getId());
+        assertNotNull(book.getTitle());
+        assertNotNull(book.getDownload());
+    }
+
+    @Test
+    public void getTop() throws FeedbooksException
+    {
+        int limit = 20;
+        Locale[] lang = new Locale[]{new Locale("es")};
+        Feedbooks feedbooks = new Feedbooks(lang, limit);
+        Book[] ret = feedbooks.getTop();
+        assertFalse(ret.length > limit);
+        Book book = ret[0];
+        assertNotNull(book.getAuthor());
+        assertNotEquals(0, book.getId());
+        assertNotNull(book.getTitle());
+        assertNotNull(book.getDownload());
+    }
+
 
 }
