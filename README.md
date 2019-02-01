@@ -2,6 +2,7 @@
 [![Build Status](https://travis-ci.com/lrusso96/feedbooks-driver.svg?token=uoNxtXYBDHpqERGMiZA8&branch=master)](https://travis-ci.com/lrusso96/feedbooks-driver) 
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
+[![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/lrusso96/feedbooks-driver.svg)](https://lgtm.com/projects/g/lrusso96/feedbooks-driver/context:java)
 [![CodeFactor](https://www.codefactor.io/repository/github/lrusso96/feedbooks-driver/badge)](https://www.codefactor.io/repository/github/lrusso96/feedbooks-driver)
 [![BCH compliance](https://bettercodehub.com/edge/badge/lrusso96/feedbooks-driver?branch=master)](https://bettercodehub.com/)
 [![codecov](https://codecov.io/gh/lrusso96/feedbooks-driver/branch/master/graph/badge.svg)](https://codecov.io/gh/lrusso96/feedbooks-driver)
@@ -66,8 +67,6 @@ feedbooks.search("Carroll");
  ```
 
  ## Dependencies
--  [Square OkHttp](https://github.com/square/okhttp)
 -  [JUnit](https://github.com/junit-team/junit4)
 -  [Jsoup](https://github.com/jhy/jsoup)
--  [org/Json](https://github.com/stleary/JSON-java)
 -  [Apache Commons Lang](https://commons.apache.org/proper/commons-lang/)
