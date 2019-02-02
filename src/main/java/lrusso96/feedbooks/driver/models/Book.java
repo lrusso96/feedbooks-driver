@@ -1,4 +1,4 @@
-package lrusso96.feedbooks.driver.core;
+package lrusso96.feedbooks.driver.models;
 
 import java.net.URI;
 import java.time.LocalDate;

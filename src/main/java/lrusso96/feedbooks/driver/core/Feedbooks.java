@@ -1,5 +1,9 @@
 package lrusso96.feedbooks.driver.core;
 
+import lrusso96.feedbooks.driver.models.Author;
+import lrusso96.feedbooks.driver.models.Book;
+import lrusso96.feedbooks.driver.models.Category;
+import lrusso96.feedbooks.driver.models.Language;
 import lrusso96.feedbooks.driver.exceptions.FeedbooksException;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.jsoup.Connection;
@@ -10,11 +14,9 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
-import static lrusso96.feedbooks.driver.core.Utils.parseUTC;
+import static lrusso96.feedbooks.driver.Utils.parseUTC;
 
 public class Feedbooks
 {
@@ -137,6 +139,68 @@ public class Feedbooks
                 }
             }
             return ret.toArray(new Book[0]);
+        }
+        catch (IOException e)
+        {
+            throw new FeedbooksException(e.getMessage());
+        }
+    }
+
+    public Result searchWithResult(String query) throws FeedbooksException
+    {
+        URI endpoint = URI.create("https://feedbooks.com/books/search.atom");
+        return _searchwithResult(endpoint, query);
+    }
+
+    public Result getRecentWithResult() throws FeedbooksException
+    {
+        URI endpoint = URI.create("https://feedbooks.com/books/recent.atom");
+        return _searchwithResult(endpoint, null);
+    }
+
+    public Result getTopWithResult() throws FeedbooksException
+    {
+        URI endpoint = URI.create("https://feedbooks.com/books/top.atom");
+        return _searchwithResult(endpoint, null);
+    }
+
+    public void loadMore(Result result) throws FeedbooksException
+    {
+        _searchwithResult(result);
+    }
+
+
+    private Result _searchwithResult(URI endpoint, String query) throws FeedbooksException
+    {
+       if(endpoint==null)
+           return null;
+       Result result = new Result(endpoint, query);
+       _searchwithResult(result);
+       return result;
+    }
+
+    private void _searchwithResult(Result result) throws FeedbooksException
+    {
+        if(result == null)
+            return;
+        Set<Book> books = new HashSet<>();
+        try
+        {
+            Connection connection = Jsoup.connect(result.getEndpoint().toString());
+            if(result.getQuery()!= null)
+                connection = connection.data("query", result.getQuery());
+            if(label!= null)
+                connection = connection.data("category", label+"");
+            int page = result.getPage() + 1;
+            for (Language language : languages)
+            {
+                Document doc = connection.data("lang", language.toString()).data("page", page + "").get();
+                Elements entries = doc.getElementsByTag("entry");
+                for (Element entry : entries)
+                    books.add(parseBook(entry));
+            }
+            result.setPage(page);
+            result.addBooks(books);
         }
         catch (IOException e)
         {

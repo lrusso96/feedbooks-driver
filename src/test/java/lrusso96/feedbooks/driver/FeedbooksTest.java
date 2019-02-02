@@ -1,16 +1,26 @@
 package lrusso96.feedbooks.driver;
 
 import lrusso96.feedbooks.driver.core.*;
+import lrusso96.feedbooks.driver.models.Book;
+import lrusso96.feedbooks.driver.models.Category;
+import lrusso96.feedbooks.driver.models.Language;
 import lrusso96.feedbooks.driver.exceptions.FeedbooksException;
 import org.junit.Test;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.junit.Assert.*;
 
 public class FeedbooksTest
 {
+
+    private final int SLEEP = 2000;
+
     @Test
-    public void simpleSearch() throws FeedbooksException
+    public void simpleSearch() throws FeedbooksException, InterruptedException
     {
+        Thread.sleep(SLEEP);
         Feedbooks feedbooks = new FeedbooksBuilder().build();
         Book[] ret = feedbooks.search("Carroll");
         assertNotEquals(0, ret.length);
@@ -22,8 +32,9 @@ public class FeedbooksTest
     }
 
     @Test
-    public void customLanguages() throws FeedbooksException
+    public void customLanguages() throws FeedbooksException, InterruptedException
     {
+        Thread.sleep(SLEEP);
         Feedbooks feedbooks = new FeedbooksBuilder()
                 .addLanguage(Language.ITALIAN)
                 .addLanguage(Language.ENGLISH)
@@ -38,8 +49,9 @@ public class FeedbooksTest
     }
 
     @Test
-    public void maxResults() throws FeedbooksException
+    public void maxResults() throws FeedbooksException, InterruptedException
     {
+        Thread.sleep(SLEEP);
         int limit = 2;
         Feedbooks feedbooks = new FeedbooksBuilder().setMaxResults(limit).build();
         Book[] ret = feedbooks.search("Shakespeare");
@@ -52,8 +64,9 @@ public class FeedbooksTest
     }
 
     @Test
-    public void getRecent() throws FeedbooksException
+    public void getRecent() throws FeedbooksException, InterruptedException
     {
+        Thread.sleep(SLEEP);
         int limit = 20;
         Feedbooks feedbooks = new FeedbooksBuilder().setMaxResults(limit).addLanguage(Language.ITALIAN).build();
         Book[] ret = feedbooks.getRecent();
@@ -66,8 +79,9 @@ public class FeedbooksTest
     }
 
     @Test
-    public void getTop() throws FeedbooksException
+    public void getTop() throws FeedbooksException, InterruptedException
     {
+        Thread.sleep(SLEEP);
         int limit = 20;
         Feedbooks feedbooks = new FeedbooksBuilder().setMaxResults(limit).addLanguage(Language.SPANISH).build();
         Book[] ret = feedbooks.getTop();
@@ -80,8 +94,22 @@ public class FeedbooksTest
     }
 
     @Test
-    public void getSpecificCategory() throws FeedbooksException
+    public void loadMoreTopBooks() throws FeedbooksException, InterruptedException
     {
+        Thread.sleep(SLEEP);
+        Feedbooks feedbooks = new FeedbooksBuilder().addLanguage(Language.ITALIAN).build();
+        Result result = feedbooks.getTopWithResult();
+        Set<Book> books = result.getBooks();
+        Set<Book> backup = new HashSet<>(books);
+        feedbooks.loadMore(result);
+        assertTrue(books.containsAll(backup));
+        assertEquals(books.size(), 2 * backup.size());
+    }
+
+    @Test
+    public void getSpecificCategory() throws FeedbooksException, InterruptedException
+    {
+        Thread.sleep(SLEEP);
         Category.Label[] categories = new Category.Label[]{Category.Label.DRAMA, Category.Label.SEA_STORIES};
         for (Category.Label label : categories)
         {
@@ -104,8 +132,9 @@ public class FeedbooksTest
     }
 
     @Test
-    public void getAllBooks() throws FeedbooksException
+    public void getAllBooks() throws FeedbooksException, InterruptedException
     {
+        Thread.sleep(SLEEP);
         Feedbooks feedbooks = new FeedbooksBuilder()
                 .setUnlimitedSearch()
                 .addLanguage(Language.ITALIAN)

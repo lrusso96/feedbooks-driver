@@ -1,5 +1,8 @@
 package lrusso96.feedbooks.driver.core;
 
+import lrusso96.feedbooks.driver.models.Category;
+import lrusso96.feedbooks.driver.models.Language;
+
 import java.util.ArrayList;
 import java.util.List;
 

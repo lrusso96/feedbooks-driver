@@ -1,4 +1,4 @@
-package lrusso96.feedbooks.driver.core;
+package lrusso96.feedbooks.driver;
 
 import java.time.*;
 
