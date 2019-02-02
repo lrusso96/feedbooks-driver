@@ -39,7 +39,7 @@ You can easily add to your existing project through Maven or Gradle.
 <dependency>
     <groupId>com.github.lrusso96</groupId>
     <artifactId>feedbooks-driver</artifactId>
-    <version>0.1.0</version>
+    <version>0.2.0</version>
 </dependency>
 ```
 
@@ -62,8 +62,17 @@ dependencies {
 
 ### Examples
 ```
+// build a Fedbooks object
 Feedbooks feedbooks = new FeedbooksBuilder().addLanguage(Language.ITALIAN).build();
+
+//make a simple search
 feedbooks.search("Carroll");
+
+//or a more complex one for later queries
+Result result = feedbooks.getTopWithResult();
+Set<Book> books = result.getBooks();
+[...]
+feedbooks.loadMore(result);
  ```
 
  ## Dependencies
